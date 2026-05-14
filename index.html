@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Missional AI 2026 Video Explorer</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero__inner">
+      <p class="eyebrow">Missional AI 2026</p>
+      <h1>Missional AI 2026 Video Explorer</h1>
+      <p class="lede">A visual guide for exploring Missional AI talks by theme, audience, and searchable subtitle timestamps.</p>
+      <div class="stats" aria-label="Collection statistics">
+        <span><strong id="videoCount">51</strong> videos</span>
+        <span><strong>Caption</strong> search</span>
+        <span><strong>YouTube</strong> timestamp jumps</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="summary-panel" aria-labelledby="summary-title">
+      <div>
+        <h2 id="summary-title">Executive Summary</h2>
+        <p>These Missional AI videos show a young but serious movement forming around AI, mission, Bible translation, theological education, church technology, and global outreach. The collection is strongest when read as a set of discernment conversations rather than as a single technology pitch.</p>
+        <p>Use this guide to choose talks by theme: theological anthropology, AI ethics, translation, global missions, ministry operations, or technical contribution. Search uses a caption token index to locate relevant moments and jump to YouTube timestamps without republishing full transcripts.</p>
+      </div>
+      <aside class="summary-panel__aside">
+        <h3>Good starting points</h3>
+        <ul class="quick-links">
+          <li><a href="#searchResults" data-query="imago human">Human identity and the imago Dei</a></li>
+          <li><a href="#searchResults" data-query="hallucination bible tools">AI hallucination and Bible tools</a></li>
+          <li><a href="#searchResults" data-query="translation languages global">Translation and global access</a></li>
+          <li><a href="#searchResults" data-query="responsible ethics evaluation">Responsible AI and evaluation</a></li>
+          <li><a href="#searchResults" data-query="church pastor agents">Practical ministry infrastructure</a></li>
+        </ul>
+      </aside>
+    </section>
+
+    <section class="controls" aria-label="Video filters and search">
+      <label class="search-box">
+        <span>Search titles, summaries, themes, and caption tokens</span>
+        <input id="searchInput" type="search" autocomplete="off" placeholder="Try: hallucination, translation, imago dei, Iran, pastor">
+      </label>
+      <div class="filter-row">
+        <label>
+          Theme
+          <select id="themeFilter">
+            <option value="">All themes</option>
+          </select>
+        </label>
+        <label>
+          Audience
+          <select id="audienceFilter">
+            <option value="">All audiences</option>
+          </select>
+        </label>
+        <label>
+          Sort
+          <select id="sortSelect">
+            <option value="date-desc">Newest first</option>
+            <option value="title-asc">Title A-Z</option>
+            <option value="match-desc">Best match</option>
+          </select>
+        </label>
+      </div>
+    </section>
+
+    <section class="map-panel" aria-labelledby="map-title">
+      <div class="section-heading">
+        <h2 id="map-title">Theme and Term Relationship Map</h2>
+        <p>Circle size reflects frequency across the video collection. Lines show recurring relationships between themes and caption-derived terms. Click any node to search.</p>
+      </div>
+      <div id="termMap" class="term-map" role="img" aria-label="Relationship map of Missional AI themes and frequent terms"></div>
+    </section>
+
+    <section id="searchResults" class="search-results" hidden>
+      <div class="section-heading">
+        <h2>Caption Timestamp Matches</h2>
+        <p>Search results jump directly to YouTube. The public index stores token-to-time matches, not full subtitle transcripts.</p>
+      </div>
+      <div id="matchList" class="match-list"></div>
+    </section>
+
+    <section class="section-heading">
+      <h2>Visual Table of Contents</h2>
+      <p id="resultCount">Loading videos...</p>
+    </section>
+
+    <section id="videoGrid" class="video-grid" aria-live="polite"></section>
+  </main>
+
+  <footer>
+    <p>Built from public Missional AI YouTube captions and local summaries. Full subtitle text is not republished in this site.</p>
+  </footer>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>
