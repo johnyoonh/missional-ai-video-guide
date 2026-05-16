@@ -4,11 +4,13 @@ const state = {
   theme: "",
   audience: "",
   sort: "date-desc",
+  colorTheme: "light",
   tagCounts: new Map(),
   expandedMatches: new Set(),
 };
 
 const els = {
+  themeToggle: document.querySelector("#themeToggle"),
   videoCount: document.querySelector("#videoCount"),
   searchInput: document.querySelector("#searchInput"),
   themeFilter: document.querySelector("#themeFilter"),
@@ -21,12 +23,44 @@ const els = {
   termMap: document.querySelector("#termMap"),
 };
 
+const themeStorageKey = "missional-ai-video-guide-theme";
+
 const stopwords = new Set([
   "about", "after", "again", "also", "because", "being", "from", "have",
   "into", "just", "like", "more", "most", "only", "that", "their", "them",
   "then", "there", "these", "they", "this", "those", "through", "very",
   "what", "when", "where", "which", "while", "with", "would", "your",
 ]);
+
+function storedTheme() {
+  try {
+    const value = localStorage.getItem(themeStorageKey);
+    if (value === "dark" || value === "light") return value;
+  } catch {
+    // Keep the page usable when localStorage is unavailable.
+  }
+  return window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function applyColorTheme(theme) {
+  state.colorTheme = theme === "dark" ? "dark" : "light";
+  document.documentElement.dataset.theme = state.colorTheme;
+  els.themeToggle?.setAttribute("aria-pressed", String(state.colorTheme === "dark"));
+  els.themeToggle?.setAttribute("aria-label", `Switch to ${state.colorTheme === "dark" ? "light" : "dark"} mode`);
+  const label = els.themeToggle?.querySelector(".theme-toggle__label");
+  const icon = els.themeToggle?.querySelector(".theme-toggle__icon");
+  if (label) label.textContent = state.colorTheme === "dark" ? "Light mode" : "Dark mode";
+  if (icon) icon.textContent = state.colorTheme === "dark" ? "L" : "D";
+}
+
+function setColorTheme(theme) {
+  applyColorTheme(theme);
+  try {
+    localStorage.setItem(themeStorageKey, state.colorTheme);
+  } catch {
+    // Persistence is optional.
+  }
+}
 
 function tokenize(value) {
   return (value || "")
@@ -62,6 +96,9 @@ function tagColor(tag) {
   let hash = 0;
   for (const char of tag) hash = ((hash << 5) - hash + char.charCodeAt(0)) | 0;
   const hue = Math.abs(hash) % 360;
+  if (state.colorTheme === "dark") {
+    return `--tag-bg: hsl(${hue} 36% 22%); --tag-ink: hsl(${hue} 60% 86%); --tag-border: hsl(${hue} 32% 38%)`;
+  }
   return `--tag-bg: hsl(${hue} 55% 92%); --tag-ink: hsl(${hue} 48% 24%); --tag-border: hsl(${hue} 42% 78%)`;
 }
 
@@ -348,6 +385,11 @@ els.sortSelect.addEventListener("change", (event) => {
   renderVideos();
 });
 
+els.themeToggle?.addEventListener("click", () => {
+  setColorTheme(state.colorTheme === "dark" ? "light" : "dark");
+  if (state.data) renderVideos();
+});
+
 els.videoGrid.addEventListener("click", (event) => {
   const tag = event.target.closest("[data-tag]");
   if (!tag) return;
@@ -385,6 +427,8 @@ document.querySelectorAll("[data-query]").forEach((link) => {
     setSearch(link.dataset.query || "");
   });
 });
+
+applyColorTheme(storedTheme());
 
 init().catch((error) => {
   console.error(error);
